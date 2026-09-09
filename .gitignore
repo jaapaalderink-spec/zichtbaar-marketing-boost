@@ -19,6 +19,9 @@ dist-ssr
 # Wrangler / Cloudflare
 .wrangler/
 .dev.vars
+php/config/config.local.php
+php/config/config.local.php.lock
+php/storage/
 
 # Editor directories and files
 .vscode/*

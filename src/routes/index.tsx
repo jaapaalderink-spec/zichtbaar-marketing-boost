@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState, type FormEvent } from "react";
 import logo from "@/assets/logo.png";
+import { services } from "@/lib/services";
 
 export const Route = createFileRoute("/")({
   component: Index,
@@ -52,7 +53,11 @@ const diensten = [
     num: "02",
     title: "SEA & AI Advertising",
     intro: "Winst per euro, niet per indruk.",
-    items: ["Campagnes met een budgetplan", "Automatische optimalisatie", "Weekrapport in je inbox"],
+    items: [
+      "Campagnes met een budgetplan",
+      "Automatische optimalisatie",
+      "Weekrapport in je inbox",
+    ],
   },
   {
     num: "03",
@@ -228,6 +233,13 @@ function Index() {
                     </li>
                   ))}
                 </ul>
+                <a
+                  href={`/diensten/${services.find((service) => service.num === d.num)!.slug}`}
+                  className="mt-6 inline-flex items-center gap-2 text-sm font-semibold text-brand underline underline-offset-4 hover:text-ink"
+                  aria-label={`Bekijk ${d.title}`}
+                >
+                  Bekijk de dienst <span aria-hidden="true">↗</span>
+                </a>
               </article>
             ))}
           </div>
@@ -281,8 +293,8 @@ function Index() {
                 Laten we over jouw zichtbaarheid praten.
               </h2>
               <p className="mt-3 max-w-[40ch] text-sm leading-relaxed text-pretty text-brand/70 lg:text-base">
-                Vertel kort waar je staat. We komen terug met een concreet eerste stappenplan —
-                geen standaard pitch.
+                Vertel kort waar je staat. We komen terug met een concreet eerste stappenplan — geen
+                standaard pitch.
               </p>
               <dl className="mt-8 space-y-4 text-sm">
                 <div className="flex items-baseline gap-3">

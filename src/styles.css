@@ -160,3 +160,16 @@
     transform: translateY(0);
   }
 }
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  .rise {
+    animation: none;
+    opacity: 1;
+  }
+  .spotlight {
+    animation: none;
+  }
+}
