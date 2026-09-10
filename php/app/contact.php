@@ -19,8 +19,8 @@ function handle_contact(): never {
         $data = validate_contact($_POST);
         $id = $_POST['request_id'] ?? '';
         if (!is_string($id) || !preg_match('/^[a-f0-9]{32}$/', $id) || !isset($_SESSION['contact_ids'][$id])) throw new InvalidArgumentException('Dit formulier is verlopen. Vernieuw de pagina.');
-        $exists = db()->prepare('SELECT id FROM messages WHERE id=?'); $exists->execute([$id]);
-        if ($exists->fetch()) { flash('success','Je aanvraag is al ontvangen. We nemen contact met je op.'); redirect($return.'#contact'); }
+        $exists = db()->prepare('SELECT id,status FROM messages WHERE id=?'); $exists->execute([$id]);
+        if ($previous=$exists->fetch()) { flash('success',$previous['status']==='sent'?'Je aanvraag is al ontvangen en doorgestuurd. We nemen contact met je op.':'Je aanvraag is al opgeslagen, maar de e-mail is nog niet bevestigd. Bel 085-7605135 als je snel contact wilt.'); redirect($return.'#contact'); }
         if (!rate_limit('contact:'.($_SERVER['REMOTE_ADDR'] ?? 'unknown'),5,3600) || !rate_limit('contact-email:'.strtolower($data['email']),3,3600) || !rate_limit('contact-global',50,3600)) throw new InvalidArgumentException('Je hebt meerdere aanvragen gedaan. Probeer het later opnieuw of bel 085-7605135.');
         db()->prepare('INSERT INTO messages(id,payload,created_at) VALUES(?,?,?)')->execute([$id,json_encode($data, JSON_THROW_ON_ERROR | JSON_UNESCAPED_UNICODE),time()]);
         require_once __DIR__.'/mail.php';

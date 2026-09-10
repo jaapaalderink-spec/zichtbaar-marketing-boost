@@ -11,7 +11,7 @@ export function ServicePage({ service }: { service: Service }) {
         <a
           href="/"
           aria-label="Zichtbaar Marketing — home"
-          className="rounded-xl bg-white px-3 py-1.5 ring-1 ring-black/5"
+          className="px-3 py-1.5"
         >
           <img src={logo} alt="Zichtbaar Marketing" className="h-7 w-auto" />
         </a>

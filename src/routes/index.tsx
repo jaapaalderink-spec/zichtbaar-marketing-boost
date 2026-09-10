@@ -94,7 +94,7 @@ const stappen = [
 function Logo({ className }: { className?: string }) {
   return (
     <span
-      className={`inline-flex items-center rounded-xl bg-white px-3 py-1.5 ring-1 ring-black/5 ${className ?? ""}`}
+      className={`inline-flex items-center px-3 py-1.5 ${className ?? ""}`}
     >
       <img src={logo} alt="Zichtbaar Marketing" className="h-7 w-auto" />
     </span>

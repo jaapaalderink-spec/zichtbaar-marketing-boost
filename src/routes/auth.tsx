@@ -74,7 +74,7 @@ function AuthPage() {
   return (
     <div className="flex min-h-screen items-center justify-center px-6 py-16 font-body text-ink">
       <div className="w-full max-w-md rounded-[24px] bg-white/60 p-8 ring-1 ring-black/5 backdrop-blur-xl sm:p-10">
-        <span className="inline-flex items-center rounded-xl bg-white px-3 py-1.5 ring-1 ring-black/5">
+        <span className="inline-flex items-center px-3 py-1.5">
           <img src={logo} alt="Zichtbaar Marketing" className="h-7 w-auto" />
         </span>
         <h1 className="mt-6 font-display text-3xl tracking-tight text-brand">

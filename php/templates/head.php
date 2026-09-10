@@ -3,7 +3,7 @@
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 <title><?= e($title) ?></title>
 <meta name="description" content="<?= e($description ?? '') ?>">
-<?php if (str_starts_with($path, '/admin')): ?><meta name="robots" content="noindex,nofollow"><?php else: ?>
+<?php if (str_starts_with($path, '/admin') || ($noindex ?? false)): ?><meta name="robots" content="noindex,nofollow"><?php else: ?>
 <link rel="canonical" href="<?= e(rtrim(config()['base_url'],'/').$path) ?>">
 <meta property="og:title" content="<?= e($title) ?>"><meta property="og:description" content="<?= e($description ?? '') ?>">
 <meta property="og:type" content="website"><meta property="og:url" content="<?= e(rtrim(config()['base_url'],'/').$path) ?>">

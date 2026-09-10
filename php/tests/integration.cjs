@@ -56,7 +56,7 @@ const hidden = (html, name) => decode(html.match(new RegExp('name="' + name + '"
 function client() {
   let cookie = '';
   return async (url, body) => {
-    const res = await fetch('http://127.0.0.1:8081' + url, { method: body ? 'POST' : 'GET', redirect: 'manual', headers: { ...(cookie ? { cookie } : {}), ...(body ? { 'content-type': 'application/x-www-form-urlencoded' } : {}) }, ...(body ? { body: new URLSearchParams(body) } : {}) });
+    const res = await fetch('http://127.0.0.1:8081' + url, { method: body ? 'POST' : 'GET', redirect: 'manual', headers: { ...(cookie ? { cookie } : {}), ...(body && !(body instanceof FormData) ? { 'content-type': 'application/x-www-form-urlencoded' } : {}) }, ...(body ? { body: body instanceof FormData ? body : new URLSearchParams(body) } : {}) });
     const next = res.headers.get('set-cookie'); if (next) cookie = next.split(';')[0];
     return { status: res.status, html: await res.text(), location: res.headers.get('location') };
   };
@@ -98,11 +98,44 @@ function client() {
   await admin('/admin/retry', { csrf: token, id: messageId }); assert.equal(captured.length, 1);
   r = await anon('/diensten/webshops'); const bad = { ...submission, csrf: hidden(r.html, 'csrf'), request_id: hidden(r.html, 'request_id'), email: 'bad\r\nBcc: victim@example.com' };
   await anon('/contact', bad); r = await anon('/'); assert.match(r.html, /geldig e-mailadres/);
+  assert.equal((await anon('/admin/newsletter/export')).status,303);
+  const signup={csrf:hidden(r.html,'csrf'),first_name:'José',last_name:'van Dijk',company:'Test & Partners',email:'subscriber@example.com',consent:'yes',website:''};
+  await anon('/nieuwsbrief/aanmelden',{...signup,first_name:''});
+  assert.match((await anon('/')).html,/Vul je voornaam/); assert.equal(captured.length,1);
+  assert.equal((await anon('/nieuwsbrief/aanmelden',{...signup,csrf:'bad'})).status,403);
+  await anon('/nieuwsbrief/aanmelden',{...signup,consent:''});
+  r=await anon('/'); assert.match(r.html,/geef toestemming/); assert.equal(captured.length,1);
+  await anon('/nieuwsbrief/aanmelden',signup); assert.equal(captured.length,2);
+  const confirmation=captured[1].match(/http:\/\/127\.0\.0\.1:8081(\/nieuwsbrief\/bevestigen\?token=[a-f0-9]{64})/)[1];
+  const unsubscribe=captured[1].match(/http:\/\/127\.0\.0\.1:8081(\/nieuwsbrief\/afmelden\?id=[a-f0-9]{32}&token=[a-f0-9]{64})/)[1];
+  r=await admin('/admin/newsletter/export'); assert.doesNotMatch(r.html,/subscriber@example.com/);
+  r=await anon(confirmation); assert.equal(r.status,200);
+  assert.doesNotMatch((await admin('/admin/newsletter/export')).html,/subscriber@example.com/); // A mail scanner GET cannot subscribe.
+  assert.equal((await anon(confirmation,{csrf:'bad'})).status,403);
+  r=await anon(confirmation,{csrf:hidden(r.html,'csrf')}); assert.match(r.html,/inschrijving is bevestigd/);
+  assert.equal((await anon(confirmation)).status,400); // Single use.
+  r=await admin('/admin/newsletter/export'); assert.match(r.html,/subscriber@example.com/); assert.match(r.html,/afmelden/);
+  assert.match(r.html,/voornaam,achternaam,bedrijfsnaam,email/); assert.match(r.html,/José/); assert.match(r.html,/van Dijk/); assert.match(r.html,/Test & Partners/);
+  r=await admin('/admin/newsletter'); assert.match(r.html,/José/); assert.match(r.html,/Test &amp; Partners/);
+  r=await anon(unsubscribe); assert.equal(r.status,200);
+  assert.match((await admin('/admin/newsletter/export')).html,/subscriber@example.com/); // GET cannot unsubscribe either.
+  r=await anon(unsubscribe,{csrf:hidden(r.html,'csrf')}); assert.match(r.html,/Je bent afgemeld/);
+  assert.doesNotMatch((await admin('/admin/newsletter/export')).html,/subscriber@example.com/);
+  assert.equal((await anon(unsubscribe.replace(/token=./,'token=Z'))).status,400);
+  r=await admin('/admin/test-mail',{csrf:token}); assert.equal(r.status,303); assert.equal(captured.length,3);
+  assert.match(captured[2],/To: info@zichtbaar-marketing.nl/);
+  configuration();
+  r=await anon('/'); await anon('/nieuwsbrief/aanmelden',{...signup,csrf:hidden(r.html,'csrf'),email:'no-mail@example.com'});
+  assert.match((await anon('/')).html,/bevestigingsmail kan momenteel niet/); assert.equal(captured.length,3);
+  r=await admin('/admin/settings'); assert.match(r.html,/Nog geen wachtwoord opgeslagen/);
+  await admin('/admin/test-mail',{csrf:token}); assert.match((await admin('/admin/settings')).html,/Er ontbreekt nog/);
+  await require('./blog-http.cjs')({admin,anon,token,hidden,assert,fs,path,root,execFileSync,php,phpArgs,configFile});
   await admin('/admin/logout', { csrf: token }); assert.equal((await admin('/admin')).status, 303);
   const attacker = client(); r = await attacker('/admin/login'); const attackerToken = hidden(r.html, 'csrf');
   for (let i=0;i<11;i++) r = await attacker('/admin/login',{csrf:attackerToken,email:'info@zichtbaar-marketing.nl',password:'wrong'});
   assert.equal(r.status,429);
   // First-run setup requires its one-time token and keeps the password hashed.
+  configuration();
   const setupToken=require('node:crypto').randomBytes(32).toString('hex');
   let configText=fs.readFileSync(configFile,'utf8');
   configText=configText.replace(quote(hash),"''").replace('];',','+quote('setup_token_hash')+'=>'+quote(require('node:crypto').createHash('sha256').update(setupToken).digest('hex'))+'];');
@@ -113,5 +146,5 @@ function client() {
   assert.equal((await setup('/admin/setup',{csrf:hidden(r.html,'csrf'),password,confirmation:password})).status,303);
   assert.ok(!fs.readFileSync(configFile,'utf8').includes(password));
   assert.equal((await setup('/admin/setup?token='+setupToken)).location,'/admin/login');
-  console.log('PASS: 5 public forms, private routes, login, CSRF, persistent edits, XSS escaping, version conflicts, contact persistence, deduplication, verified local TLS SMTP, fixed recipient/reply-to, validation, logout, login rate limit and one-time account setup. No external mail sent.');
+  console.log('PASS: contact forms, SMTP delivery, admin protections, persistent edits, newsletter consent, double opt-in, single-use tokens, scanner-safe links, unsubscribe, protected confirmed-only CSV export, missing-SMTP errors and admin test mail. No external mail sent.');
 })().catch(error => { console.error(error); console.error(logs.slice(-2000)); process.exitCode = 1; }).finally(() => { server.kill(); smtp.close(); });

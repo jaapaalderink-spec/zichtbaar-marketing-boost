@@ -28,6 +28,22 @@ De PHP-ontwikkelserver is uitsluitend voor lokaal gebruik. De PHP-site is bereik
 
 ## Beheer en contact
 
+- Op alle publieke pagina’s staat een aparte nieuwsbriefinschrijving met een niet vooraf aangevinkte toestemmingskeuze. Er wordt niets toegevoegd aan de actieve lijst totdat de bezoeker de bevestigingsmail volgt en de bevestigingsknop indrukt (binnen 48 uur).
+- `/admin/newsletter`: bekijk de status en exporteer alleen bevestigde inschrijvingen. De export bevat de persoonlijke afmeldlink. Neem deze op in elke nieuwsbrief en gebruik vóór elke verzending een verse export, zodat afmeldingen worden gerespecteerd. Er is geen programma voor het opstellen of massaal versturen van nieuwsbrieven inbegrepen.
+- Nieuwsbriefadressen, toestemmingsverklaring en tijdstippen worden in dezelfde privé-SQLite-database opgeslagen. Bevestigingstokens worden gehasht opgeslagen. Afmeldingen worden direct uitgesloten van de volgende export; eerder gedownloade bestanden veranderen niet automatisch.
+- De contactformulieren en bevestigingsmails gebruiken dezelfde SMTP-configuratie. Ontbreekt het mailboxwachtwoord, dan vraagt het beheer dat nu expliciet. Met **Stuur een testmail naar mijn inbox** test je de opgeslagen configuratie.
+- Stel in `/admin/settings` ook de echte HTTPS-website-URL in. Deze wordt gebruikt voor bevestigings- en afmeldlinks. Een URL met `127.0.0.1` is alleen voor lokale tests.
+
+## Zelf hosten: van lokaal naar online
+
+1. Kies je eigen hosting met PHP 8.2+, PDO SQLite en OpenSSL. Een draaiende PHP-versie lokaal betekent niet dat deze al online staat. Een Lovable/React-preview voert deze PHP-bestanden niet uit.
+2. Upload het PHP-installatiepakket en stel de document root in op de map `public` **binnen dat pakket**. Upload de privéconfiguratie en SQLite-data nooit in de publieke map. Behoud bij updates de bestaande map `storage` en `config/config.local.php`.
+3. Activeer HTTPS en het beheeraccount, vul het mailboxwachtwoord en de door jouw provider opgegeven SMTP-server in. De voorbeeldhost is geen bevestiging dat jouw provider die host gebruikt.
+4. Sla de publieke website-URL op en gebruik de testmailknop. Test daarna één contactformulier én een volledige nieuwsbriefinschrijving, bevestiging en afmelding vanaf het echte domein.
+5. Controleer echte aflevering in de inbox. Lokale tests gebruiken een afgeschermde testmailserver en bewijzen geen bezorging via jouw hostingprovider.
+
+Automatische controles: `node tests/integration.cjs /pad/naar/php /pad/naar/openssl`. Deze gebruiken een aparte tijdelijke database en een lokale SMTP-server met gecontroleerd TLS-certificaat. Er worden geen echte e-mails verstuurd.
+
 - `/admin`: publiceer tekstwijzigingen voor de homepage en vier dienstenpagina’s. Wijzigingen zijn blijvend opgeslagen in SQLite; gelijktijdige wijzigingen geven een versieconflict.
 - `/admin/messages`: bekijk aanvragen en probeer mislukte verzending handmatig opnieuw. Bij een onzekere SMTP-uitslag eerst de inbox controleren om dubbele e-mail te voorkomen. Er is geen automatische verzendtaak ingericht.
 - `/admin/settings`: SMTP instellen. Wachtwoorden staan uitsluitend in de niet-publieke configuratie en worden niet teruggetoond.
@@ -37,3 +53,7 @@ De PHP-ontwikkelserver is uitsluitend voor lokaal gebruik. De PHP-site is bereik
 - Bewaar contactgegevens niet langer dan nodig. Bespreek een passende bewaartermijn en back-upverwijdering voordat de website publiek wordt ingezet.
 
 PHPMailer is meegeleverd uit de officiële v7.1.1-release; zie `lib/PHPMailer/LICENSE`. Update deze bibliotheek periodiek via de officiële bron.
+
+## Blogs en LinkedIn
+
+Via /admin/blog kun je artikelen maken, onderwerpen uploaden en de eerstvolgende blog met één knop direct laten maken en publiceren. Automatisch publiceren staat standaard op dinsdag 10:00 Nederlandse tijd, met optionele AI-afbeeldingen. Via /admin/blog/linkedin kun je doorplaatsen naar de bedrijfspagina instellen. Zie BLOG-INSTALLATIE.md voor API-instellingen, LinkedIn-autorisatie en de cronjob op je eigen hosting.
