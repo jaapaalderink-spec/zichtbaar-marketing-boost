@@ -4,6 +4,7 @@ require dirname(__DIR__).'/app/bootstrap.php';
 require dirname(__DIR__).'/app/content.php';
 $path = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH) ?: '/';
 try {
+    if ($path === '/afspraak-plannen') { require dirname(__DIR__).'/app/bookings.php'; booking_public(); }
     if (in_array($path,['/nieuwsbrief/aanmelden','/nieuwsbrief/bevestigen','/nieuwsbrief/afmelden'],true)) {
         require dirname(__DIR__).'/app/newsletter.php';
         if($path==='/nieuwsbrief/aanmelden' && $_SERVER['REQUEST_METHOD']==='POST') subscribe_newsletter();
@@ -19,7 +20,8 @@ try {
     if ($_SERVER['REQUEST_METHOD'] !== 'GET') { http_response_code(405); header('Allow: GET'); exit; }
     if ($path === '/blog' || str_starts_with($path,'/blog/')) { require dirname(__DIR__).'/app/blog-public.php'; blog_public($path); }
     $serviceId = str_starts_with($path,'/diensten/') ? substr($path,10) : null;
-    $notFound = $path !== '/' && (!$serviceId || $serviceId === 'home' || !isset(defaults()[$serviceId]));
+    $websiteLanding = $path === '/website-laten-maken';
+    $notFound = !$websiteLanding && $path !== '/' && (!$serviceId || $serviceId === 'home' || !isset(defaults()[$serviceId]));
     if ($notFound) http_response_code(404);
     $home = page('home')['content'];
     $services = [];
@@ -27,10 +29,14 @@ try {
     $service = !$notFound && $serviceId ? page($serviceId)['content'] : null;
     $title = $notFound ? 'Pagina niet gevonden' : ($service ? $service['title'].' — Zichtbaar Marketing' : $home['seoTitle']);
     $description = $service['intro'] ?? $home['seoDescription'];
+    if ($websiteLanding) {
+        $title = 'Website laten maken vanaf € 115 per maand | Zichtbaar Marketing';
+        $description = 'Een website voor jouw bedrijf vanaf € 115 per maand exclusief btw, op basis van 24 maanden. Bekijk Basis en Plus en vraag een kennismaking aan.';
+    }
     require dirname(__DIR__).'/templates/head.php';
     require dirname(__DIR__).'/templates/header.php';
     if ($notFound) echo '<main class="container section"><h1>Pagina niet gevonden</h1><p>Deze pagina bestaat niet.</p><a class="button" href="/">Naar de homepage</a></main>';
-    else require dirname(__DIR__).'/templates/'.($service ? 'service' : 'home').'.php';
+    else require dirname(__DIR__).'/templates/'.($websiteLanding ? 'website' : ($service ? 'service' : 'home')).'.php';
     require dirname(__DIR__).'/templates/footer.php';
 } catch (Throwable $error) {
     error_log('Website request failed: '.get_class($error));

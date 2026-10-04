@@ -42,6 +42,7 @@ if ($path === '/admin/setup') {
     }
 } else {
     require_admin();
+    if ($path === '/admin/meetings' || str_starts_with($path,'/admin/meetings/')) { require __DIR__.'/bookings-admin.php'; meeting_admin($path); }
     if ($path === '/admin/blog' || str_starts_with($path,'/admin/blog/')) { require __DIR__.'/blog-admin.php'; handle_blog_admin($path); }
     if ($path === '/admin/newsletter/export') { require_once __DIR__.'/newsletter-admin.php'; newsletter_export(); }
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -105,7 +106,7 @@ $notice=$_SESSION['flash'] ?? null; unset($_SESSION['flash']);
 <button class="button full"><?= $path === '/admin/setup' ? 'Beheeraccount activeren' : 'Inloggen' ?></button></form>
 <?php endif ?></section>
 <?php else: ?>
-<h1>Website beheren</h1><nav class="admin-tabs" aria-label="Beheer"><a href="/admin" <?= $path === '/admin' ? 'aria-current="page"' : '' ?>>Pagina’s</a><a href="/admin/messages" <?= $path === '/admin/messages' ? 'aria-current="page"' : '' ?>>Contactaanvragen</a><a href="/admin/newsletter">Nieuwsbrief</a><a href="/admin/blog">Blogs</a><a href="/admin/settings" <?= $path === '/admin/settings' ? 'aria-current="page"' : '' ?>>E-mailinstellingen</a><a href="/admin/password" <?= $path === '/admin/password' ? 'aria-current="page"' : '' ?>>Wachtwoord</a></nav>
+<h1>Website beheren</h1><nav class="admin-tabs" aria-label="Beheer"><a href="/admin" <?= $path === '/admin' ? 'aria-current="page"' : '' ?>>Pagina’s</a><a href="/admin/meetings">Meetings & agenda</a><a href="/admin/messages" <?= $path === '/admin/messages' ? 'aria-current="page"' : '' ?>>Contactaanvragen</a><a href="/admin/newsletter">Nieuwsbrief</a><a href="/admin/blog">Blogs</a><a href="/admin/settings" <?= $path === '/admin/settings' ? 'aria-current="page"' : '' ?>>E-mailinstellingen</a><a href="/admin/password" <?= $path === '/admin/password' ? 'aria-current="page"' : '' ?>>Wachtwoord</a></nav>
 <?php if ($path === '/admin/newsletter'): require_once __DIR__.'/newsletter-admin.php'; render_newsletter_admin(); ?>
 <?php elseif ($path === '/admin/settings'): $c=config(); ?>
 <section class="panel admin-panel"><h2>E-mail versturen</h2><p>Alle contactaanvragen worden doorgestuurd naar <strong><?= e(CONTACT_RECIPIENT) ?></strong>. Gebruik de SMTP-gegevens van je mailprovider. Je wachtwoord wordt nooit in dit formulier teruggetoond.</p><p class="notice <?= smtp_configured()?'success':'error' ?>"><?= smtp_configured()?'SMTP-gegevens zijn ingevuld. Aflevering moet nog met een echte aanvraag worden gecontroleerd.':'SMTP is nog niet volledig ingesteld. Controleer de server, gebruikersnaam en het mailboxwachtwoord. Contactaanvragen worden wel opgeslagen.' ?></p>

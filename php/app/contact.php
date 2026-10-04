@@ -13,7 +13,7 @@ function validate_contact(array $input): array {
 function handle_contact(): never {
     check_csrf();
     $source = is_string($_POST['source'] ?? null) ? $_POST['source'] : '/';
-    $return = $source === '/' || in_array($source, array_map(fn($id)=>'/diensten/'.$id, array_keys(defaults())), true) ? $source : '/';
+    $return = in_array($source, ['/', '/website-laten-maken'], true) || in_array($source, array_map(fn($id)=>'/diensten/'.$id, array_keys(defaults())), true) ? $source : '/';
     try {
         if (!empty($_POST['website'])) throw new InvalidArgumentException('Het formulier kon niet worden verwerkt. Probeer opnieuw.');
         $data = validate_contact($_POST);

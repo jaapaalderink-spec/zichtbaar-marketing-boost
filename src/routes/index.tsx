@@ -93,9 +93,7 @@ const stappen = [
 
 function Logo({ className }: { className?: string }) {
   return (
-    <span
-      className={`inline-flex items-center px-3 py-1.5 ${className ?? ""}`}
-    >
+    <span className={`inline-flex items-center px-3 py-1.5 ${className ?? ""}`}>
       <img src={logo} alt="Zichtbaar Marketing" className="h-7 w-auto" />
     </span>
   );
@@ -129,6 +127,9 @@ function Index() {
             <Logo />
           </a>
           <nav className="hidden items-center gap-8 text-sm font-medium text-brand/80 md:flex">
+            <a href="/website-laten-maken" className="transition-colors hover:text-brand">
+              Website laten maken
+            </a>
             <a href="#diensten" className="transition-colors hover:text-brand">
               Diensten
             </a>
@@ -140,7 +141,7 @@ function Index() {
             </a>
           </nav>
           <a
-            href="#contact"
+            href="https://www.zichtbaar-marketing.nl/afspraak-plannen"
             className="rounded-lg bg-accent px-4 py-2 text-sm font-semibold text-accent-foreground ring-1 ring-accent/40 transition-colors hover:bg-ink"
           >
             Plan een afspraak
@@ -171,6 +172,12 @@ function Index() {
                 begrijpen.
               </p>
               <div className="rise rise-3 mt-9 flex flex-wrap items-center gap-4">
+                <a
+                  href="/website-laten-maken"
+                  className="rounded-[10px] bg-brand px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-ink"
+                >
+                  Website vanaf € 115 per maand
+                </a>
                 <a
                   href="#contact"
                   className="rounded-[10px] bg-accent px-6 py-3 text-sm font-semibold text-accent-foreground ring-1 ring-accent/50 transition-colors hover:bg-ink"

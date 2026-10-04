@@ -10,11 +10,17 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as WebsiteLatenMakenRouteImport } from './routes/website-laten-maken'
 import { Route as DienstenDienstRouteImport } from './routes/diensten.$dienst'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const WebsiteLatenMakenRoute = WebsiteLatenMakenRouteImport.update({
+  id: '/website-laten-maken',
+  path: '/website-laten-maken',
   getParentRoute: () => rootRouteImport,
 } as any)
 const DienstenDienstRoute = DienstenDienstRouteImport.update({
@@ -25,27 +31,31 @@ const DienstenDienstRoute = DienstenDienstRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/website-laten-maken': typeof WebsiteLatenMakenRoute
   '/diensten/$dienst': typeof DienstenDienstRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/website-laten-maken': typeof WebsiteLatenMakenRoute
   '/diensten/$dienst': typeof DienstenDienstRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/website-laten-maken': typeof WebsiteLatenMakenRoute
   '/diensten/$dienst': typeof DienstenDienstRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/diensten/$dienst'
+  fullPaths: '/' | '/website-laten-maken' | '/diensten/$dienst'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/diensten/$dienst'
-  id: '__root__' | '/' | '/diensten/$dienst'
+  to: '/' | '/website-laten-maken' | '/diensten/$dienst'
+  id: '__root__' | '/' | '/website-laten-maken' | '/diensten/$dienst'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  WebsiteLatenMakenRoute: typeof WebsiteLatenMakenRoute
   DienstenDienstRoute: typeof DienstenDienstRoute
 }
 
@@ -56,6 +66,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/website-laten-maken': {
+      id: '/website-laten-maken'
+      path: '/website-laten-maken'
+      fullPath: '/website-laten-maken'
+      preLoaderRoute: typeof WebsiteLatenMakenRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/diensten/$dienst': {
@@ -70,6 +87,7 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  WebsiteLatenMakenRoute: WebsiteLatenMakenRoute,
   DienstenDienstRoute: DienstenDienstRoute,
 }
 export const routeTree = rootRouteImport
