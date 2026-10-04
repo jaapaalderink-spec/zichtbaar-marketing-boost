@@ -186,12 +186,21 @@ function blog_run_schedule(?int $now=null,?callable $textGenerator=null,?callabl
         return ['published'=>$count ?? 0,'message'=>$message,'error'=>true];
     } finally { flock($lock,LOCK_UN); fclose($lock); }
 }
+// Escape source text before introducing our limited, semantic inline markup.
+function blog_inline(string $text): string {
+    return preg_replace('/\*\*(?=\S)([^\n]+?)(?<=\S)\*\*/u','<strong>$1</strong>',e($text));
+}
 function blog_body(string $text): string {
-    $out='';
-    foreach(preg_split('/\n\s*\n/',trim($text)) as $block) {
-        if(preg_match('/^## (.+)$/u',$block,$match)) $out.='<h2>'.e($match[1]).'</h2>';
-        elseif(preg_match('/^### (.+)$/u',$block,$match)) $out.='<h3>'.e($match[1]).'</h3>';
-        else $out.='<p>'.nl2br(e($block)).'</p>';
+    $out=''; $paragraph=[];
+    $flush=function() use (&$out,&$paragraph): void {
+        if($paragraph) { $out.='<p>'.nl2br(blog_inline(implode("\n",$paragraph))).'</p>'; $paragraph=[]; }
+    };
+    foreach(explode("\n",str_replace(["\r\n","\r"],"\n",trim($text))) as $line) {
+        if(trim($line)==='') { $flush(); continue; }
+        if(preg_match('/^(#{2,4}) (.+)$/u',$line,$match)) {
+            $flush(); $level=strlen($match[1]);
+            $out.='<h'.$level.'>'.blog_inline($match[2]).'</h'.$level.'>';
+        } else $paragraph[]=$line;
     }
-    return $out;
+    $flush(); return $out;
 }

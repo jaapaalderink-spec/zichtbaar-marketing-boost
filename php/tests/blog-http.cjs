@@ -2,13 +2,13 @@ module.exports=async function({admin,anon,token,hidden,assert,fs,path,root,execF
   assert.equal((await anon('/blog')).status,200);
   assert.equal((await anon('/admin/blog')).status,303);
   let r=await admin('/admin/blog/settings'); assert.match(r.html,/value="2" selected/); assert.match(r.html,/value="10:00"/);
-  const fields={csrf:token,title:'Blog <script>test</script>',excerpt:'Een korte preview',body:'## Tussenkop\n\nVolledige blogtekst <script>alert(1)</script>',status:'draft',version:'0'};
+  const fields={csrf:token,title:'Blog <script>test</script>',excerpt:'Een korte preview',body:'## Tussenkop\n### Subkop\n#### Detail\n\nVolledige blogtekst <script>alert(1)</script> en **vet**',status:'draft',version:'0'};
   assert.equal((await admin('/admin/blog/edit',{...fields,csrf:'bad'})).status,403);
   const upload=new FormData(); for(const [k,v] of Object.entries(fields)) upload.set(k,v);
   upload.set('image',new Blob([fs.readFileSync(path.join(root,'public/assets/logo.png'))],{type:'image/png'}),'logo.png');
   r=await admin('/admin/blog/edit',upload); assert.equal(r.status,303);
   const id=new URL(r.location,'http://localhost').searchParams.get('id');
-  r=await admin('/admin/blog/edit?id='+id); const version=hidden(r.html,'version');
+  r=await admin('/admin/blog/edit?id='+id); const version=hidden(r.html,'version'); assert.match(r.html,/data-heading="4"/); assert.match(r.html,/data-bold/); assert.match(r.html,/\*\*vet\*\*/);
   const image=r.html.match(/src="(\/blog\/media\/[^"]+)"/)[1];
   assert.equal((await anon(image)).status,404);
   assert.equal((await anon('/blog/voorbeeld/'+id)).status,404);
@@ -17,7 +17,7 @@ module.exports=async function({admin,anon,token,hidden,assert,fs,path,root,execF
   assert.equal((await anon(image)).status,200);
   r=await anon('/blog'); assert.match(r.html,/Een korte preview/);
   const link=r.html.match(/href="(\/blog\/blog-[^"]+)"/)[1];
-  r=await anon(link); assert.equal(r.status,200); assert.match(r.html,/<h2>Tussenkop<\/h2>/); assert.match(r.html,/Volledige blogtekst &lt;script&gt;/); assert.match(r.html,/Plan een kennismaking/);
+  r=await anon(link); assert.equal(r.status,200); assert.match(r.html,/<h2>Tussenkop<\/h2><h3>Subkop<\/h3><h4>Detail<\/h4>/); assert.match(r.html,/<strong>vet<\/strong>/); assert.match(r.html,/Volledige blogtekst &lt;script&gt;/); assert.match(r.html,/Plan een kennismaking/);
   r=await admin('/admin/blog/edit',{...fields,id,version}); assert.match(r.html,/ondertussen gewijzigd/);
   const bad=new FormData(); for(const [k,v] of Object.entries({...fields,title:'Invalid image'})) bad.set(k,v);
   bad.set('image',new Blob(['<svg onload="alert(1)"></svg>'],{type:'image/svg+xml'}),'test.svg');
