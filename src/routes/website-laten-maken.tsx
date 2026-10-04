@@ -69,8 +69,8 @@ function WebsitePage() {
         >
           <a href="/#diensten">Alle diensten</a>
           <a href="#prijzen">Abonnementen</a>
-          <a href="#kennismaking" className={button}>
-            Vraag een kennismaking aan
+          <a href="https://www.zichtbaar-marketing.nl/afspraak-plannen" className={button}>
+            Plan een kennismaking
           </a>
         </nav>
       </header>
@@ -87,8 +87,8 @@ function WebsitePage() {
             route naar contact. Samen werken we jouw wensen uit tot een professionele website.
           </p>
           <div className="mt-8 flex flex-wrap items-center gap-5">
-            <a className={button} href="#kennismaking">
-              Vraag een vrijblijvende kennismaking aan
+            <a className={button} href="https://www.zichtbaar-marketing.nl/afspraak-plannen">
+              Plan een vrijblijvende kennismaking
             </a>
             <a className="font-semibold text-brand underline underline-offset-4" href="#prijzen">
               Bekijk de abonnementen
@@ -154,7 +154,10 @@ function WebsitePage() {
                     </li>
                   ))}
                 </ul>
-                <a href="#kennismaking" className={`${button} mt-auto`}>
+                <a
+                  href="https://www.zichtbaar-marketing.nl/afspraak-plannen"
+                  className={`${button} mt-auto`}
+                >
                   Bespreek {p.name}
                 </a>
               </article>
@@ -211,12 +214,12 @@ function WebsitePage() {
         <section id="kennismaking" className={`${panel} mt-16 scroll-mt-8`}>
           <h2 className="font-display text-3xl">Benieuwd hoe jouw website eruit kan zien?</h2>
           <p className="mt-4 max-w-[60ch] leading-relaxed text-ink/80">
-            Vraag een vrijblijvende kennismaking aan. Vertel kort over je bedrijf en, als je al een
-            concept hebt ontvangen, wat je daarvan vindt. We spreken samen een geschikt moment af.
+            Kies een vrij tijdstip voor een kennismaking. We bevestigen de afspraak definitief en
+            sturen je daarna een Google Meet-link.
           </p>
           <div className="mt-7 flex flex-wrap gap-5">
-            <a className={button} href="/#contact">
-              Vraag een kennismaking aan
+            <a className={button} href="https://www.zichtbaar-marketing.nl/afspraak-plannen">
+              Plan een kennismaking
             </a>
             <a
               className="self-center font-semibold text-brand underline underline-offset-4"

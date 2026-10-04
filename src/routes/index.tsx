@@ -141,7 +141,7 @@ function Index() {
             </a>
           </nav>
           <a
-            href="#contact"
+            href="https://www.zichtbaar-marketing.nl/afspraak-plannen"
             className="rounded-lg bg-accent px-4 py-2 text-sm font-semibold text-accent-foreground ring-1 ring-accent/40 transition-colors hover:bg-ink"
           >
             Plan een afspraak

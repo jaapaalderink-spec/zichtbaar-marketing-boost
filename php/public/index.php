@@ -4,6 +4,7 @@ require dirname(__DIR__).'/app/bootstrap.php';
 require dirname(__DIR__).'/app/content.php';
 $path = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH) ?: '/';
 try {
+    if ($path === '/afspraak-plannen') { require dirname(__DIR__).'/app/bookings.php'; booking_public(); }
     if (in_array($path,['/nieuwsbrief/aanmelden','/nieuwsbrief/bevestigen','/nieuwsbrief/afmelden'],true)) {
         require dirname(__DIR__).'/app/newsletter.php';
         if($path==='/nieuwsbrief/aanmelden' && $_SERVER['REQUEST_METHOD']==='POST') subscribe_newsletter();

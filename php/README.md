@@ -2,9 +2,23 @@
 
 ## Websiteabonnementen
 
-De landingspagina `/website-laten-maken` toont Basis (€ 115 per maand exclusief btw, maximaal 3 pagina’s, formulier, 3 aanpassingen per jaar) en Plus (€ 145 per maand exclusief btw, maximaal 7 pagina’s, formulier, boekingsmodule, 5 aanpassingen per jaar). Beide tarieven zijn op basis van 24 maanden. De pagina gebruikt het bestaande contactformulier om een kennismaking aan te vragen; er is geen agenda-integratie. De inhoud staat in `templates/website.php`. Het bestaande tekstbeheer omvat deze nieuwe pagina nog niet.
+De landingspagina `/website-laten-maken` toont Basis (€ 115 per maand exclusief btw, maximaal 3 pagina’s, formulier, 3 aanpassingen per jaar) en Plus (€ 145 per maand exclusief btw, maximaal 7 pagina’s, formulier, boekingsmodule, 5 aanpassingen per jaar). Beide tarieven zijn op basis van 24 maanden. De knoppen openen `/afspraak-plannen`. De inhoud staat in `templates/website.php`. Het bestaande tekstbeheer omvat deze nieuwe pagina nog niet.
 
 Bijwerken: upload de gewijzigde bronbestanden; behoud `storage` en `config/config.local.php`. Stel vóór verkoop de scope van een aanpassing en de overige abonnementsvoorwaarden vast.
+
+## Boekingen en Google Meet
+
+- `/admin/meetings` (ook via **Meetings & agenda** in het beheer) toont een maandagenda met vrije, te bevestigen en bevestigde afspraken. Kies per dag een begin- en eindtijd en een duur van 15–120 minuten om tijdstippen beschikbaar te maken. Overlappende perioden worden geweigerd. Vrije tijdstippen kun je sluiten.
+- `/afspraak-plannen` toont alleen vrije toekomstige tijdstippen. Een reservering blokkeert het tijdstip direct en staat in de admin-agenda als **Te bevestigen**. De bezoeker ontvangt een ontvangstmail en het beheeradres een melding, via dezelfde SMTP-instellingen als de rest van de website.
+- Open de afspraak in de agenda en klik **Afspraak definitief bevestigen**. De bezoeker krijgt een bevestiging met een `.ics`-agendabestand.
+- Na bevestiging kun je een bestaande Google Meet-link invoeren en op **Sla Meet-link op en deel per e-mail** klikken. Maak de link zelf via Google Meet → nieuwe vergadering → vergadering voor later. De mail bevat de link en een bijgewerkte agenda-uitnodiging met dezelfde afspraakreferentie.
+- Annuleren stuurt een annuleringsmail en agenda-annulering. Het tijdstip blijft gesloten totdat je het bewust opnieuw beschikbaar maakt. Verplaatsen gebeurt door de oude afspraak te annuleren en een nieuw tijdstip te laten reserveren.
+- E-mailstatus is per afspraak zichtbaar. Zonder SMTP blijft de mail opgeslagen. Mislukte verzending kan handmatig opnieuw worden geprobeerd; controleer eerst de inbox bij een onzekere uitslag. Oude nog niet verstuurde mails vervallen als de afspraak wijzigt, zodat geen verouderde uitnodiging wordt verstuurd.
+- Alle tijden gebruiken Europe/Amsterdam; opslag en agenda-uitnodigingen gebruiken UTC. Dubbele reserveringen worden met een databasebeperking en transactie voorkomen. Er is geen automatische Google-accountkoppeling of synchronisatie met andere agenda’s; blokkeer externe afspraken zelf door geen vrije tijdstippen voor die perioden te publiceren.
+
+De module draait in de PHP-hostingversie met het bestaande PHP-beheer en SQLite. De React/Lovable-versie verwijst naar de boekingspagina op het eigen domein en voert de PHP-module niet zelf uit. Upload de bijgewerkte PHP-map op de hosting met document root `public`, behoud de bestaande privéconfiguratie en opslag, en test vervolgens één reservering, bevestiging en Meet-link met je eigen mailbox. Tabellen worden automatisch aan de bestaande database toegevoegd; voorbeeldafspraken en testgegevens worden niet meegeleverd.
+
+Boekingstests: `node tests/bookings.cjs /pad/naar/php /pad/naar/openssl`. Ze gebruiken tijdelijke opslag en een lokale TLS-testmailserver en versturen geen externe e-mails.
 
 Zelfstandige PHP-website met dezelfde vijf publieke pagina’s, beheer voor de pagin teksten, contactopslag en SMTP-verzending. Geen Node.js, Supabase of externe database nodig op de hosting. De bestaande React/Lovable-bron blijft apart beschikbaar in de repository; wijzigingen in het PHP-beheer wijzigen die bronbestanden niet.
 

@@ -1,9 +1,9 @@
 <main id="main" class="container website-landing">
-<section class="panel hero-panel" style="margin-top:32px">
+<section class="panel hero-panel" >
 <p class="eyebrow">Websites door Zichtbaar Marketing</p>
 <h1>Een website die past bij jouw bedrijf.</h1>
 <p class="lead">Een heldere presentatie van je diensten, een herkenbare uitstraling en een eenvoudige route naar contact. Samen werken we jouw wensen uit tot een professionele website.</p>
-<div class="actions"><a class="button" href="#contact">Vraag een vrijblijvende kennismaking aan</a><a class="text-link" href="#prijzen">Bekijk de abonnementen</a></div>
+<div class="actions"><a class="button" href="/afspraak-plannen">Plan een vrijblijvende kennismaking</a><a class="text-link" href="#prijzen">Bekijk de abonnementen</a></div>
 <p>Vanaf € 115 per maand exclusief btw · Op basis van 24 maanden</p>
 </section>
 <section class="section" aria-labelledby="jouw-website"><h2 id="jouw-website">Van eerste idee naar jouw eigen website.</h2>
@@ -15,7 +15,7 @@
 <section id="prijzen" aria-labelledby="abonnementen"><p class="eyebrow">Heldere maandtarieven</p><h2 id="abonnementen">Kies de ruimte die jouw bedrijf nodig heeft.</h2>
 <div class="grid two">
 <?php foreach ([['Basis',115,'Een compacte website die jouw bedrijf helder presenteert.',['Maximaal 3 pagina’s','Contactformulier','3 aanpassingen per jaar']],['Plus',145,'Meer ruimte voor je aanbod en de mogelijkheid om afspraken te boeken.',['Maximaal 7 pagina’s','Contactformulier','Boekingsmodule','5 aanpassingen per jaar']]] as [$name,$price,$intro,$items]): ?>
-<article class="panel card price-card"><h3><?= e($name) ?></h3><p><?= e($intro) ?></p><p class="price"><strong>€ <?= $price ?></strong> per maand</p><p>Exclusief btw<br><strong>Op basis van een abonnementsduur van 24 maanden.</strong></p><ul class="bullets"><?php foreach($items as $item): ?><li><?= e($item) ?></li><?php endforeach ?></ul><a class="button" href="#contact">Bespreek <?= e($name) ?></a></article>
+<article class="panel card price-card"><h3><?= e($name) ?></h3><p><?= e($intro) ?></p><p class="price"><strong>€ <?= $price ?></strong> per maand</p><p>Exclusief btw<br><strong>Op basis van een abonnementsduur van 24 maanden.</strong></p><ul class="bullets"><?php foreach($items as $item): ?><li><?= e($item) ?></li><?php endforeach ?></ul><a class="button" href="/afspraak-plannen">Bespreek <?= e($name) ?></a></article>
 <?php endforeach ?>
 </div><p>Tijdens de kennismaking bespreken we de precieze scope, wat onder een aanpassing valt en de overige voorwaarden.</p></section>
 <section class="dark approach website-approach" aria-labelledby="website-werkwijze"><div><p class="eyebrow">Zo werken we samen</p><h2 id="website-werkwijze">Zo maken we jouw website.</h2></div><ol class="steps">
@@ -32,8 +32,5 @@
 ['Wanneer kan de website klaar zijn?','Dat hangt af van je wensen en de beschikbare teksten en beelden. Tijdens de kennismaking stemmen we de planning af.'],
 ] as [$question,$answer]): ?><details class="panel card"><summary><?= e($question) ?></summary><p><?= e($answer) ?></p></details><?php endforeach ?>
 </section>
-<?php
-$service = ['closing'=>'Benieuwd hoe jouw website eruit kan zien?','closingText'=>'Vraag een vrijblijvende kennismaking aan. Vertel kort over je bedrijf en, als je al een concept hebt ontvangen, wat je daarvan vindt. We spreken samen een geschikt moment af.','cta'=>'Vraag een kennismaking aan'];
-require __DIR__.'/contact.php';
-?>
+<section class="section"><div class="panel contact-intro"><h2>Benieuwd hoe jouw website eruit kan zien?</h2><p>Kies een vrij tijdstip voor een kennismaking. We bevestigen de afspraak definitief en sturen je daarna een Google Meet-link.</p><a class="button" href="/afspraak-plannen">Plan een kennismaking</a></div></section>
 </main>
