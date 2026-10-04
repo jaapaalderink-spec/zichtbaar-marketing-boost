@@ -1,5 +1,11 @@
 # Zichtbaar Marketing — PHP-versie
 
+## Websiteabonnementen
+
+De landingspagina `/website-laten-maken` toont Basis (€ 115 per maand exclusief btw, maximaal 3 pagina’s, formulier, 3 aanpassingen per jaar) en Plus (€ 145 per maand exclusief btw, maximaal 7 pagina’s, formulier, boekingsmodule, 5 aanpassingen per jaar). Beide tarieven zijn op basis van 24 maanden. De pagina gebruikt het bestaande contactformulier om een kennismaking aan te vragen; er is geen agenda-integratie. De inhoud staat in `templates/website.php`. Het bestaande tekstbeheer omvat deze nieuwe pagina nog niet.
+
+Bijwerken: upload de gewijzigde bronbestanden; behoud `storage` en `config/config.local.php`. Stel vóór verkoop de scope van een aanpassing en de overige abonnementsvoorwaarden vast.
+
 Zelfstandige PHP-website met dezelfde vijf publieke pagina’s, beheer voor de pagin teksten, contactopslag en SMTP-verzending. Geen Node.js, Supabase of externe database nodig op de hosting. De bestaande React/Lovable-bron blijft apart beschikbaar in de repository; wijzigingen in het PHP-beheer wijzigen die bronbestanden niet.
 
 ## Hosting

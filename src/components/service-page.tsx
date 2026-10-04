@@ -8,11 +8,7 @@ export function ServicePage({ service }: { service: Service }) {
   return (
     <div className="min-h-screen font-body text-ink antialiased">
       <header className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-4 px-6 py-5">
-        <a
-          href="/"
-          aria-label="Zichtbaar Marketing — home"
-          className="px-3 py-1.5"
-        >
+        <a href="/" aria-label="Zichtbaar Marketing — home" className="px-3 py-1.5">
           <img src={logo} alt="Zichtbaar Marketing" className="h-7 w-auto" />
         </a>
         <nav
@@ -89,6 +85,13 @@ export function ServicePage({ service }: { service: Service }) {
           </div>
         </section>
         <section className="py-16 lg:py-24" aria-labelledby="inhoud">
+          {service.slug === "ai-ready-websites" && (
+            <p className="mb-8">
+              <a href="/website-laten-maken" className={button}>
+                Bekijk websiteabonnementen vanaf € 115 per maand
+              </a>
+            </p>
+          )}
           <p className="text-sm font-semibold uppercase tracking-widest text-brand">
             Wat we voor je doen
           </p>
