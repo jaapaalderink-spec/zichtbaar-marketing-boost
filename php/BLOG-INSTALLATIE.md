@@ -54,3 +54,7 @@ De documentroot blijft `php/public`. Houd `php/config` en `php/storage` buiten d
 De geautomatiseerde tests gebruiken tijdelijke opslag, lokale SMTP en gesimuleerde AI-antwoorden. Een echte AI-aanroep en de hostingcron moeten na het instellen van je sleutel en hosting worden gecontroleerd.
 
 Afbeeldingskoppeling: [OpenAI Image API](https://developers.openai.com/api/docs/guides/image-generation). Geef de hostingtaak minimaal vijf minuten uitvoertijd voor tekst en afbeelding samen.
+
+## Tekstopmaak in de editor
+
+Gebruik Kop H2, Subkop H3, Subkop H4 en Vet boven de blogtekst. Gewone tekst verwijdert de kopopmaak van de geselecteerde regels. Selecteer woorden voor Vet; Ctrl/Cmd+B werkt ook. De editor toont en bewaart de opmaakcodes (`##`, `###`, `####` en `**tekst**`). De blogpagina en het privévoorbeeld tonen echte koppen en vetgedrukte tekst. Gebruik de artikeltitel als H1 en bouw de inhoud op met H2, dan H3 en H4. Bestaande tekst blijft beschikbaar; er is geen databasemigratie nodig.

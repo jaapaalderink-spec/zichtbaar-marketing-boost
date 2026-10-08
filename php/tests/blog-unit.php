@@ -70,3 +70,12 @@ verify((int)$db->query('SELECT next_run FROM blog_schedule')->fetchColumn()===$n
 verify(!empty(blog_run_schedule($now,$writer,$imageMaker,$first)['error']),'Double submission rejected');
 verify(blog_post($second)['status']==='queued','Double click does not publish next item');
 echo "PASS: blog scheduling, DST, idempotence, pause, failure backoff and mocked AI responses.\n";
+
+verify(blog_body("## Kop\n### Subkop\n#### Detail\nTekst met **nadruk**.")==='<h2>Kop</h2><h3>Subkop</h3><h4>Detail</h4><p>Tekst met <strong>nadruk</strong>.</p>','Adjacent headings and bold are semantic');
+verify(blog_body("Eerste regel\nTweede regel\n\n## Bestaande kop\n\nAlinea")==="<p>Eerste regel<br />\nTweede regel</p><h2>Bestaande kop</h2><p>Alinea</p>",'Legacy plain text and H2 unchanged');
+verify(blog_body('**<img src=x onerror=alert(1)>**')==='<p><strong>&lt;img src=x onerror=alert(1)&gt;</strong></p>','Bold escapes untrusted HTML');
+verify(blog_body('# Geen tweede H1')==='<p># Geen tweede H1</p>','Body cannot introduce H1');
+$formatted="## Kop\n### Subkop\n#### Detail\n\nEen **vet** woord.";
+$id=blog_save(['title'=>'Formatting persistence','body'=>$formatted,'status'=>'draft'],[]);
+verify(blog_post($id)['body']===$formatted,'Formatting survives database roundtrip');
+echo "PASS: semantic H2/H3/H4, strong, legacy rendering, HTML escaping and formatting persistence.\n";
