@@ -70,3 +70,9 @@ Via /admin/blog kun je artikelen maken, onderwerpen uploaden en de eerstvolgende
 ### Herstel van bestaande routes
 
 De router en `templates/website.php` zijn hersteld uit commit `7c085ce`, met behoud van de SEO-routes. De sitemap bevat ook `/website-laten-maken`. De route `/afspraak-plannen` gebruikt de bestaande `app/bookings.php` op de hosting; die module is in deze update niet opnieuw toegevoegd aan de repository. De gebruiker heeft werking van websitepagina, afspraakroute, robots.txt en sitemap op mijn.host bevestigd. Lokale PHP-runtime-tests waren niet beschikbaar.
+
+## Inhoud en cases bijgewerkt 9 oktober 2026
+
+De standaardteksten van de vier dienstpagina’s zijn gelijkgetrokken met de door de gebruiker geïnstalleerde inhoudsupdates. Bij bestaande installaties blijven teksten in SQLite leidend; alleen dit JSON-bestand uploaden overschrijft opgeslagen teksten niet.
+
+`/over-ons`, `/cases` en de drie cases voor GL Link, Kruiden van Haar en Ruijter Bouw zijn vaste sjablonen met aangeleverde doelen, werkzaamheden en opleveringen. De pagina’s staan in de sitemap en navigatie. Ze zijn nog niet bewerkbaar via het beheer. Website- en afspraakroutes blijven behouden. De gebruiker bevestigde installatie van alle bijbehorende pakketten. PHP-runtime-tests waren lokaal niet beschikbaar.

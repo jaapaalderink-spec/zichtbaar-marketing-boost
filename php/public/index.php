@@ -19,10 +19,12 @@ try {
     }
     if ($_SERVER['REQUEST_METHOD'] !== 'GET') { http_response_code(405); header('Allow: GET'); exit; }
     if (in_array($path, ['/robots.txt', '/sitemap.xml'], true)) { require dirname(__DIR__).'/app/seo.php'; seo_endpoint($path); }
+    if ($path === '/cases' || str_starts_with($path, '/cases/')) { require dirname(__DIR__).'/app/cases.php'; cases_public($path); }
     if ($path === '/blog' || str_starts_with($path,'/blog/')) { require dirname(__DIR__).'/app/blog-public.php'; blog_public($path); }
     $serviceId = str_starts_with($path,'/diensten/') ? substr($path,10) : null;
+    $aboutPage = $path === '/over-ons';
     $websiteLanding = $path === '/website-laten-maken';
-    $notFound = !$websiteLanding && $path !== '/' && (!$serviceId || $serviceId === 'home' || !isset(defaults()[$serviceId]));
+    $notFound = !$aboutPage && !$websiteLanding && $path !== '/' && (!$serviceId || $serviceId === 'home' || !isset(defaults()[$serviceId]));
     if ($notFound) http_response_code(404);
     $home = page('home')['content'];
     $services = [];
@@ -34,10 +36,15 @@ try {
         $title = 'Website laten maken vanaf € 115 per maand | Zichtbaar Marketing';
         $description = 'Een website voor jouw bedrijf vanaf € 115 per maand exclusief btw, op basis van 24 maanden. Bekijk Basis en Plus en vraag een kennismaking aan.';
     }
+    if ($aboutPage) {
+        $title = 'Over ons | Zichtbaar Marketing Groningen';
+        $description = 'Maak kennis met Zichtbaar Marketing: 10 jaar marketingervaring en expertise in SEO, Google Ads, websites en webshops voor ZZP en MKB.';
+    }
     require dirname(__DIR__).'/templates/head.php';
     require dirname(__DIR__).'/templates/header.php';
     if ($notFound) echo '<main class="container section"><h1>Pagina niet gevonden</h1><p>Deze pagina bestaat niet.</p><a class="button" href="/">Naar de homepage</a></main>';
-    else require dirname(__DIR__).'/templates/'.($websiteLanding ? 'website' : ($service ? 'service' : 'home')).'.php';
+    else require dirname(__DIR__).'/templates/'.($aboutPage ? 'about' : ($websiteLanding ? 'website' : ($service ? 'service' : 'home'))).'.php';
+    if (!$notFound) echo '<nav class="container section" aria-label="Over Zichtbaar Marketing"><a class="text-link" href="/over-ons">Over ons</a></nav>';
     require dirname(__DIR__).'/templates/footer.php';
 } catch (Throwable $error) {
     error_log('Website request failed: '.get_class($error));

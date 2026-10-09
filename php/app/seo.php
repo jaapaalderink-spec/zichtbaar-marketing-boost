@@ -29,7 +29,7 @@ function seo_endpoint(string $path): never {
         exit;
     }
     require_once __DIR__.'/blog.php';
-    $entries = [['url'=>$base.'/'], ['url'=>$base.'/blog'], ['url'=>$base.'/website-laten-maken']];
+    $entries = [['url'=>$base.'/'], ['url'=>$base.'/blog'], ['url'=>$base.'/website-laten-maken'], ['url'=>$base.'/over-ons'], ['url'=>$base.'/cases'], ['url'=>$base.'/cases/gl-link'], ['url'=>$base.'/cases/kruiden-van-haar'], ['url'=>$base.'/cases/ruijter-bouw']];
     foreach (defaults() as $id=>$content) {
         $url = $id === 'home' ? $base.'/' : $base.'/diensten/'.$id;
         $query = db()->prepare('SELECT updated_at FROM pages WHERE id=?');
