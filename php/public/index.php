@@ -17,6 +17,7 @@ try {
         require dirname(__DIR__).'/app/contact.php'; handle_contact();
     }
     if ($_SERVER['REQUEST_METHOD'] !== 'GET') { http_response_code(405); header('Allow: GET'); exit; }
+    if (in_array($path, ['/robots.txt', '/sitemap.xml'], true)) { require dirname(__DIR__).'/app/seo.php'; seo_endpoint($path); }
     if ($path === '/blog' || str_starts_with($path,'/blog/')) { require dirname(__DIR__).'/app/blog-public.php'; blog_public($path); }
     $serviceId = str_starts_with($path,'/diensten/') ? substr($path,10) : null;
     $notFound = $path !== '/' && (!$serviceId || $serviceId === 'home' || !isset(defaults()[$serviceId]));

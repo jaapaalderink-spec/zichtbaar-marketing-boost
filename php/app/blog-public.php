@@ -15,6 +15,11 @@ function blog_public(string $path): never {
     if($notFound) http_response_code(404);
     $title=$notFound?'Blog niet gevonden':($post?$post['title'].' — Zichtbaar Marketing':'Blog — Zichtbaar Marketing');
     $description=$post['excerpt'] ?? 'Praktische inzichten over marketing, websites en de groei van jouw bedrijf.';
+    $canonicalPath = $path;
+    if ($path === '/blog') {
+        $listingPage = max(1, min(100000, (int)($_GET['pagina'] ?? 1)));
+        if ($listingPage > 1) { $canonicalPath .= '?pagina='.$listingPage; $title .= ' — Pagina '.$listingPage; }
+    }
     require dirname(__DIR__).'/templates/head.php'; require dirname(__DIR__).'/templates/header.php';
     echo '<main id="main" class="container section blog-shell">';
     if($notFound) echo '<h1>Blog niet gevonden</h1><p>Dit artikel is niet beschikbaar.</p><a class="button" href="/blog">Bekijk alle blogs</a>';

@@ -57,3 +57,12 @@ PHPMailer is meegeleverd uit de officiële v7.1.1-release; zie `lib/PHPMailer/LI
 ## Blogs en LinkedIn
 
 Via /admin/blog kun je artikelen maken, onderwerpen uploaden en de eerstvolgende blog met één knop direct laten maken en publiceren. Automatisch publiceren staat standaard op dinsdag 10:00 Nederlandse tijd, met optionele AI-afbeeldingen. Via /admin/blog/linkedin kun je doorplaatsen naar de bedrijfspagina instellen. Zie BLOG-INSTALLATIE.md voor API-instellingen, LinkedIn-autorisatie en de cronjob op je eigen hosting.
+
+## SEO-basis
+
+- `/robots.txt` verwijst naar `/sitemap.xml`. De sitemap bevat de homepage, diensten, blogoverzicht en uitsluitend reeds gepubliceerde blogs; concepten en toekomstige publicaties worden uitgesloten.
+- Publieke pagina’s bevatten Organization, WebSite en WebPage/BlogPosting structured data en breadcrumbs. Blogartikelen delen hun eigen afbeelding, publicatie- en wijzigingsdatum. Er wordt geen onbevestigde auteur toegevoegd.
+- Blogvervolgpagina’s hebben een eigen canonical. Foutpagina’s, beheer en privévoorbeelden krijgen noindex.
+- Upload bij deze update `app/seo.php`, `app/blog-public.php`, `public/index.php` en `templates/head.php`. Behoud `storage` en `config/config.local.php` op de hosting.
+- Controleer dat de website-URL in `/admin/settings` exact het gewenste HTTPS-domein is. Dien daarna `https://zichtbaar-marketing.nl/sitemap.xml` in bij Google Search Console, of gebruik de www-variant wanneer dat je ingestelde hoofddomein is.
+- Deze update koppelt Search Console of Analytics niet automatisch en wijzigt bestaande pagin teksten niet.
